@@ -1,0 +1,1326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比地数据接口服务 - 企业数据API开放平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+            box-sizing: border-box;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            min-width: 1920px;
+            overflow-x: auto;
+        }
+        
+        /* 页头样式 */
+        .header {
+            background: #fff;
+            height: 70px;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .header-content {
+            width: 1200px;
+            margin: 0 auto;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .logo-img {
+            height: 36px;
+            width: auto;
+        }
+        
+        .divider {
+            width: 1px;
+            height: 30px;
+            background: #e8e8e8;
+        }
+        
+        .page-title {
+            font-size: 18px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 顶部搜索框 */
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 2px;
+            width: 400px;
+        }
+        
+        .header-search-input {
+            flex: 1;
+            border: none;
+            padding: 10px 14px;
+            font-size: 14px;
+            outline: none;
+            background: transparent;
+        }
+        
+        .header-search-input::placeholder {
+            color: #999;
+        }
+        
+        .header-search-btn {
+            background: #1890ff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .header-search-btn:hover {
+            background: #40a9ff;
+        }
+        
+        .hotline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .hotline-icon {
+            width: 36px;
+            height: 36px;
+            background: #e6f7ff;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #1890ff;
+        }
+        
+        .hotline-text {
+            text-align: right;
+        }
+        
+        .hotline-label {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .hotline-number {
+            font-size: 18px;
+            color: #1890ff;
+            font-weight: 600;
+        }
+        
+        /* 主内容区 */
+        .main-content {
+            width: 1200px;
+            margin: 0 auto;
+            padding: 24px 0 60px;
+            display: flex;
+            gap: 24px;
+        }
+        
+        /* 左侧目录 */
+        .category-sidebar {
+            width: 260px;
+            flex-shrink: 0;
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e8e8e8;
+            overflow: hidden;
+        }
+        
+        .sidebar-header {
+            padding: 16px 20px;
+            background: #f8fafc;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .sidebar-count {
+            font-size: 13px;
+            color: #999;
+            margin-top: 4px;
+        }
+        
+        .category-list {
+            overflow-y: visible;
+        }
+        
+        .category-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 20px;
+            cursor: pointer;
+            transition: all 0.3s;
+            border-bottom: 1px solid #f5f5f5;
+        }
+        
+        .category-item:last-child {
+            border-bottom: none;
+        }
+        
+        .category-item:hover {
+            background: #f8fafc;
+        }
+        
+        .category-item.active {
+            background: #e6f7ff;
+            border-left: 3px solid #1890ff;
+        }
+        
+        .category-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        
+        .category-info {
+            flex: 1;
+        }
+        
+        .category-name {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        .category-item.active .category-name {
+            color: #1890ff;
+        }
+        
+        .category-num {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        /* 右侧内容 */
+        .content-area {
+            flex: 1;
+            min-width: 0;
+        }
+        
+        /* 接口列表 */
+        .api-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        
+        .api-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 24px;
+            border: 1px solid #e8e8e8;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .api-card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            border-color: #1890ff;
+        }
+        
+        .api-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 12px;
+        }
+        
+        .api-title-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .api-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+        
+        .api-name {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+        }
+        
+        .api-tags {
+            display: flex;
+            gap: 8px;
+        }
+        
+        .api-tag {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tag-hot {
+            background: #fff2f0;
+            color: #ff4d4f;
+        }
+        
+        .tag-method {
+            background: #f6ffed;
+            color: #52c41a;
+        }
+        
+        .api-desc {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: 16px;
+        }
+        
+        .api-footer {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .api-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            font-size: 13px;
+        }
+        
+        .api-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            color: #666;
+        }
+        
+        .api-meta-item i {
+            color: #999;
+            font-size: 12px;
+        }
+        
+        .api-meta-item span {
+            background: #f5f5f5;
+            padding: 4px 10px;
+            border-radius: 4px;
+            color: #666;
+        }
+        
+        .api-meta-item .meta-label {
+            background: transparent;
+            padding: 0;
+            color: #999;
+        }
+        
+        .api-actions {
+            display: flex;
+            gap: 12px;
+        }
+        
+        .btn-detail {
+            padding: 8px 20px;
+            border: 1px solid #d9d9d9;
+            background: #fff;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-detail:hover {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+        
+        .btn-apply {
+            padding: 8px 20px;
+            border: none;
+            background: #1890ff;
+            border-radius: 4px;
+            font-size: 14px;
+            color: #fff;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-apply:hover {
+            background: #40a9ff;
+        }
+        
+        /* 分页 */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 40px;
+        }
+        
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid #e8e8e8;
+            background: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            border-color: #1890ff;
+            color: #1890ff;
+        }
+        
+        .pagination button.active {
+            background: #1890ff;
+            color: #fff;
+            border-color: #1890ff;
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            width: 800px;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid #e8e8e8;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid #e8e8e8;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+        
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid #e8e8e8;
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 24px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .tab:hover {
+            color: #1890ff;
+        }
+        
+        .tab.active {
+            color: #1890ff;
+            border-bottom-color: #1890ff;
+            font-weight: 500;
+        }
+        
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+        
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .param-table th,
+        .param-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #e8e8e8;
+        }
+        
+        .param-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 13px;
+        }
+        
+        .param-table td {
+            font-size: 14px;
+            color: #334155;
+        }
+        
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        
+        .info-item {
+            background: #f8fafc;
+            padding: 16px;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+        
+        .info-value {
+            font-size: 15px;
+            color: #333;
+            font-weight: 500;
+        }
+        
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: #1890ff;
+            box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
+        }
+        
+        /* 申请弹窗特殊样式 */
+        .apply-modal-content {
+            width: 480px;
+        }
+        
+        .apply-notice {
+            background: #e6f7ff;
+            border: 1px solid #91d5ff;
+            border-radius: 6px;
+            padding: 12px 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .apply-notice i {
+            color: #1890ff;
+            font-size: 16px;
+        }
+        
+        .apply-notice span {
+            color: #333;
+            font-size: 14px;
+        }
+        
+        .apply-notice strong {
+            color: #1890ff;
+        }
+        
+        .apply-footer {
+            border-top: 1px solid #f0f0f0;
+            padding-top: 20px;
+            margin-top: 20px;
+            text-align: center;
+        }
+        
+        .apply-footer i {
+            color: #1890ff;
+            margin-right: 6px;
+        }
+        
+        .apply-footer span {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .apply-footer strong {
+            color: #1890ff;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页头 -->
+    <header class="header">
+        <div class="header-content">
+            <div class="header-left">
+                <div class="logo-section">
+                    <div class="logo">
+                        <img src="LOGO.jpg" alt="比地招标" class="logo-img">
+                    </div>
+                    <div class="divider"></div>
+                    <div class="page-title">比地数据接口服务</div>
+                </div>
+                <!-- 顶部搜索框 -->
+                <div class="header-search">
+                    <input type="text" class="header-search-input" id="searchInput" placeholder="搜索接口名称、ID或关键词...">
+                    <button class="header-search-btn" onclick="searchAPI()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="hotline">
+                <div class="hotline-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <div class="hotline-text">
+                    <div class="hotline-label">免费咨询热线</div>
+                    <div class="hotline-number">400-999-4928</div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 主内容区 -->
+    <main class="main-content">
+        <!-- 左侧目录 -->
+        <aside class="category-sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">接口目录</div>
+                <div class="sidebar-count">共 12 个分类，79 个接口</div>
+            </div>
+            <div class="category-list" id="categoryList">
+                <!-- 分类列表将通过JS动态生成 -->
+            </div>
+        </aside>
+
+        <!-- 右侧内容 -->
+        <div class="content-area">
+            <!-- 接口列表 -->
+            <div class="api-list" id="apiList">
+                <!-- 接口列表将通过JS动态生成 -->
+            </div>
+
+            <!-- 分页 -->
+            <div class="pagination" id="pagination">
+                <!-- 分页将通过JS动态生成 -->
+            </div>
+        </div>
+    </main>
+
+    <!-- 接口详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-info-circle text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-800" id="modalTitle">接口详情</h3>
+                        <p class="text-sm text-slate-500" id="modalSubtitle">接口ID: IC-001</p>
+                    </div>
+                </div>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('detailModal')">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(this, 'apiInfo')">接口信息</div>
+                    <div class="tab" onclick="switchTab(this, 'requestParams')">请求参数</div>
+                    <div class="tab" onclick="switchTab(this, 'responseParams')">返回参数</div>
+                    <div class="tab" onclick="switchTab(this, 'example')">示例代码</div>
+                </div>
+                
+                <div id="apiInfo" class="tab-content active">
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <p class="info-label">所属分类</p>
+                            <p class="info-value" id="detailCategory">工商信息</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">请求方式</p>
+                            <p class="info-value" id="detailMethod">GET</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">接口ID</p>
+                            <p class="info-value" id="detailId">IC-001</p>
+                        </div>
+                        <div class="info-item">
+                            <p class="info-label">API路径</p>
+                            <p class="info-value" id="detailPath">/v1/company/base</p>
+                        </div>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-slate-500 mb-2">接口描述</p>
+                        <p class="text-slate-700" id="detailDesc">查询企业工商登记基本信息...</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-slate-500 mb-2">接口地址</p>
+                        <div class="code-block">https://api.bidizhaobiao.com/v1/company/base</div>
+                    </div>
+                </div>
+                
+                <div id="requestParams" class="tab-content">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>必填</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>companyName</td>
+                                <td>string</td>
+                                <td>是</td>
+                                <td>企业名称</td>
+                            </tr>
+                            <tr>
+                                <td>creditCode</td>
+                                <td>string</td>
+                                <td>否</td>
+                                <td>统一社会信用代码</td>
+                            </tr>
+                            <tr>
+                                <td>regNum</td>
+                                <td>string</td>
+                                <td>否</td>
+                                <td>注册号</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="responseParams" class="tab-content">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>code</td>
+                                <td>int</td>
+                                <td>状态码</td>
+                            </tr>
+                            <tr>
+                                <td>message</td>
+                                <td>string</td>
+                                <td>返回信息</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>object</td>
+                                <td>返回数据</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="example" class="tab-content">
+                    <p class="text-sm text-slate-500 mb-2">请求示例</p>
+                    <div class="code-block mb-4">GET https://api.bidizhaobiao.com/v1/company/base?companyName=广州比地数据科技有限公司</div>
+                    
+                    <p class="text-sm text-slate-500 mb-2">响应示例</p>
+                    <div class="code-block">{
+  "code": 200,
+  "message": "success",
+  "data": {
+    "companyName": "广州比地数据科技有限公司",
+    "creditCode": "91440101MA59J7XXXX",
+    "regCapital": "1000万人民币",
+    "establishDate": "2016-08-15"
+  }
+}</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-detail" onclick="closeModal('detailModal')">关闭</button>
+                <button class="btn-apply" onclick="openApplyModal()">申请接口</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申请弹窗 -->
+    <div class="modal-overlay" id="applyModal">
+        <div class="modal-content apply-modal-content">
+            <div class="modal-header">
+                <h3 class="text-lg font-semibold text-slate-800">申请接口</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('applyModal')">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- 申请提示 -->
+                <div class="apply-notice">
+                    <i class="fas fa-info-circle"></i>
+                    <span>您正在申请 <strong id="applyApiName">企业工商基本信息查询</strong> 接口</span>
+                </div>
+                
+                <form id="applyForm">
+                    <div class="form-group">
+                        <label class="form-label">联系人 <span class="text-red-500">*</span></label>
+                        <input type="text" class="form-input" placeholder="请输入联系人姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">联系电话 <span class="text-red-500">*</span></label>
+                        <input type="tel" class="form-input" placeholder="请输入联系电话" required>
+                    </div>
+                </form>
+                
+                <!-- 客服电话 -->
+                <div class="apply-footer">
+                    <i class="fas fa-phone-alt"></i>
+                    <span>官方客服电话：<strong>400-999-4928</strong></span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-detail" onclick="closeModal('applyModal')">取消</button>
+                <button class="btn-apply" onclick="submitApply()">提交申请</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API分类数据
+        const categories = [
+            { id: 'all', name: '全部接口', icon: 'fa-th-large', color: '#1890ff', count: 79 },
+            { id: 'gongshang', name: '工商信息', icon: 'fa-building', color: '#2563eb', count: 15 },
+            { id: 'sifa', name: '司法风险', icon: 'fa-gavel', color: '#dc2626', count: 10 },
+            { id: 'zhishi', name: '知识产权', icon: 'fa-lightbulb', color: '#9333ea', count: 5 },
+            { id: 'jingying', name: '经营信息', icon: 'fa-chart-line', color: '#16a34a', count: 8 },
+            { id: 'zhaotoubiao', name: '招投标', icon: 'fa-handshake', color: '#0891b2', count: 5 },
+            { id: 'jingyingfengxian', name: '经营风险', icon: 'fa-exclamation-triangle', color: '#ea580c', count: 5 },
+            { id: 'qiyefazhan', name: '企业发展', icon: 'fa-rocket', color: '#4f46e5', count: 5 },
+            { id: 'shangshigongsi', name: '上市公司', icon: 'fa-chart-bar', color: '#db2777', count: 5 },
+            { id: 'jianzhushichang', name: '建筑市场', icon: 'fa-hard-hat', color: '#ca8a04', count: 13 },
+            { id: 'xinyongzhongguo', name: '信用中国', icon: 'fa-certificate', color: '#0d9488', count: 2 },
+            { id: 'teshuzhuti', name: '特殊主体', icon: 'fa-users-cog', color: '#64748b', count: 4 },
+            { id: 'tongyong', name: '通用接口', icon: 'fa-cogs', color: '#6b7280', count: 2 }
+        ];
+
+        // API接口数据
+        const apiData = {
+            'gongshang': [
+                { id: 'IC-001', name: '企业工商基本信息查询', desc: '查询企业工商登记基本信息，包括企业名称、法定代表人、注册资本、成立日期、经营状态、经营范围等。', method: 'GET', path: '/v1/company/base', hot: true },
+                { id: 'IC-002', name: '企业分支机构查询', desc: '查询企业的分支机构列表，包括分支机构名称、负责人、经营状态、注册地址等信息。', method: 'GET', path: '/v1/company/branch' },
+                { id: 'IC-003', name: '企业变更记录查询', desc: '查询企业历史工商变更记录，包括变更事项、变更前后内容及变更时间。', method: 'GET', path: '/v1/company/change' },
+                { id: 'IC-004', name: '企业主要人员查询', desc: '查询企业主要人员信息，包括法定代表人、董事、监事、高管等人员名称及职务。', method: 'GET', path: '/v1/company/employee' },
+                { id: 'IC-005', name: '企业曾用名查询', desc: '查询企业历史曾用名及更名时间，帮助追溯企业演变历史。', method: 'GET', path: '/v1/company/history-name' },
+                { id: 'IC-006', name: '企业股东信息查询', desc: '查询企业股东（出资人）信息，包括股东名称、持股比例、出资额及认缴实缴情况。', method: 'GET', path: '/v1/company/partner', hot: true },
+                { id: 'IC-007', name: '企业经营异常查询', desc: '查询企业经营异常记录，包括列入原因、列入日期、移出原因及移出日期。', method: 'GET', path: '/v1/company/abnormal' },
+                { id: 'IC-008', name: '企业行政许可查询', desc: '查询企业获得的行政许可信息，包括许可文件号、许可内容、有效期及许可机关。', method: 'GET', path: '/v1/company/license' },
+                { id: 'IC-009', name: '企业行政处罚查询', desc: '查询企业工商行政处罚记录，包括处罚决定文书号、处罚类型、处罚内容、处罚机关及处罚日期。', method: 'GET', path: '/v1/company/punishment' },
+                { id: 'IC-010', name: '企业股权出质查询', desc: '查询企业股权出质登记信息，包括出质人、质权人、出质股权数额及登记日期。', method: 'GET', path: '/v1/company/equity-pledge' },
+                { id: 'IC-011', name: '企业严重违法查询', desc: '查询企业严重违法失信名单信息，包括列入原因、列入日期及移出信息。', method: 'GET', path: '/v1/company/serious-violation' },
+                { id: 'IC-012', name: '企业清算信息查询', desc: '查询企业清算组备案信息，包括清算组负责人、清算组成员及清算备案日期。', method: 'GET', path: '/v1/company/liquidation' },
+                { id: 'IC-013', name: '企业年报基本信息查询', desc: '查询企业历年年报基本信息，包括报告年度、通讯地址、电子邮箱及企业经营状态。', method: 'GET', path: '/v1/company/annual-report' },
+                { id: 'IC-014', name: '企业年报资产信息查询', desc: '查询企业年报中披露的资产负债信息，包括总资产、净资产、营业总收入、利润总额及净利润。', method: 'GET', path: '/v1/company/annual-asset' },
+                { id: 'IC-015', name: '企业简易注销查询', desc: '查询企业简易注销公告信息，包括公告期、注销状态及异议信息。', method: 'GET', path: '/v1/company/simple-cancellation' }
+            ],
+            'sifa': [
+                { id: 'JU-001', name: '企业被执行人查询', desc: '查询企业作为被执行人的强制执行记录，包括立案时间、执行标的金额及执行法院。', method: 'GET', path: '/v1/judicial/executed', hot: true },
+                { id: 'JU-002', name: '企业失信被执行人查询', desc: '查询企业列入失信被执行人（老赖）名单信息，包括失信情形、列入时间及履行情况。', method: 'GET', path: '/v1/judicial/dishonest', hot: true },
+                { id: 'JU-003', name: '企业限制高消费查询', desc: '查询企业被法院限制高消费的记录，包括限制原因、限制类型及限制日期。', method: 'GET', path: '/v1/judicial/restrict-consumption' },
+                { id: 'JU-004', name: '企业裁判文书查询', desc: '查询企业相关裁判文书，包括案由、案件类型、审判结果、涉案金额及审理法院。', method: 'GET', path: '/v1/judicial/judgment' },
+                { id: 'JU-005', name: '企业开庭公告查询', desc: '查询企业相关开庭公告信息，包括开庭日期、案由、法院及当事人角色。', method: 'GET', path: '/v1/judicial/court-notice' },
+                { id: 'JU-006', name: '企业法院公告查询', desc: '查询企业相关法院公告，包括公告类型、公告内容及公告日期。', method: 'GET', path: '/v1/judicial/court-announcement' },
+                { id: 'JU-007', name: '企业立案信息查询', desc: '查询企业相关立案信息，包括立案类型、案由、立案法院及立案时间。', method: 'GET', path: '/v1/judicial/case-filing' },
+                { id: 'JU-008', name: '企业终本案件查询', desc: '查询企业终结本次执行程序案件，包括案件编号、执行金额、终结时间及未履行原因。', method: 'GET', path: '/v1/judicial/terminated-case' },
+                { id: 'JU-009', name: '企业破产重整查询', desc: '查询企业破产重整、清算相关案件信息，包括案件类型、案件状态、法院及管理人。', method: 'GET', path: '/v1/judicial/bankruptcy' },
+                { id: 'JU-010', name: '企业司法拍卖查询', desc: '查询企业相关司法拍卖记录，包括拍卖标的、起拍价、成交价及拍卖结果。', method: 'GET', path: '/v1/judicial/judicial-auction' }
+            ],
+            'zhishi': [
+                { id: 'IP-001', name: '企业专利信息查询', desc: '查询企业专利申请及授权信息，包括专利名称、专利类型、申请号、公开号及法律状态。', method: 'GET', path: '/v1/ip/patent', hot: true },
+                { id: 'IP-002', name: '企业商标信息查询', desc: '查询企业商标申请及注册信息，包括商标名称、注册号、注册类别、有效期及转让记录。', method: 'GET', path: '/v1/ip/trademark', hot: true },
+                { id: 'IP-003', name: '企业软件著作权查询', desc: '查询企业软件著作权登记信息，包括软件名称、版本号、登记号、登记日期及著作权人。', method: 'GET', path: '/v1/ip/software-copyright' },
+                { id: 'IP-004', name: '企业作品著作权查询', desc: '查询企业作品著作权登记信息，包括作品名称、作品类型、登记号及创作完成日期。', method: 'GET', path: '/v1/ip/work-copyright' },
+                { id: 'IP-005', name: '企业网站备案查询', desc: '查询企业互联网信息服务备案（ICP备案）信息，包括备案号、网站域名、备案主体及审核时间。', method: 'GET', path: '/v1/ip/website-record' }
+            ],
+            'jingying': [
+                { id: 'OP-001', name: '企业产品信息查询', desc: '查询企业对外披露的产品信息，包括产品名称、产品类别、产品描述等。', method: 'GET', path: '/v1/operation/product' },
+                { id: 'OP-002', name: '企业招聘信息查询', desc: '查询企业在各平台发布的招聘职位信息，包括职位名称、招聘规模、薪资范围及工作地点。', method: 'GET', path: '/v1/operation/recruitment' },
+                { id: 'OP-003', name: '企业进出口信用查询', desc: '查询企业海关注册登记信息及进出口信用评级，包括海关注册号、经营类别、信用等级。', method: 'GET', path: '/v1/operation/import-export' },
+                { id: 'OP-004', name: '企业纳税信用查询', desc: '查询企业纳税信用等级评定信息，包括评定年度、信用等级及评定税务机关。', method: 'GET', path: '/v1/operation/tax-credit' },
+                { id: 'OP-005', name: '企业土地信息查询', desc: '查询企业土地购置、土地抵押及地块公示信息，包括地块面积、坐落位置、土地用途及成交价格。', method: 'GET', path: '/v1/operation/land' },
+                { id: 'OP-006', name: '企业资质证书查询', desc: '查询企业持有的各类资质证书信息，包括资质类型、证书编号、有效期及发证机关。', method: 'GET', path: '/v1/operation/qualification' },
+                { id: 'OP-007', name: '企业债券信息查询', desc: '查询企业发行债券信息，包括债券名称、债券代码、发行金额、票面利率及到期日期。', method: 'GET', path: '/v1/operation/bond' },
+                { id: 'OP-008', name: '企业主体信用评级查询', desc: '查询企业主体信用评级信息，包括评级机构、信用等级、评级展望及评级日期。', method: 'GET', path: '/v1/operation/credit-rating' }
+            ],
+            'zhaotoubiao': [
+                { id: 'BID-001', name: '招投标公告查询', desc: '查询招投标公告信息，包括招标公告、中标公告、变更公告等。支持按地区、行业、金额、时间等条件筛选。', method: 'GET', path: '/v1/bid/announcement', hot: true },
+                { id: 'BID-002', name: '审批项目查询', desc: '查询政府审批项目信息，包括审批项目名称、审批时间、项目地区及审批机关。', method: 'GET', path: '/v1/bid/approval-project' },
+                { id: 'BID-003', name: '招投标项目详情查询', desc: '查询招投标项目详细信息，包括招标时间、开标时间、项目金额、招标范围及投标方列表。', method: 'GET', path: '/v1/bid/project-detail' },
+                { id: 'BID-004', name: '拟在建项目查询', desc: '查询企业拟建或在建项目信息，包括项目名称、立项时间、投资金额及建设地点。', method: 'GET', path: '/v1/bid/planned-project' },
+                { id: 'BID-005', name: '招标法律条款查询', desc: '查询招投标相关法律条款数据，包括条款标题、适用区域、条款内容及来源法规。', method: 'GET', path: '/v1/bid/legal-clause' }
+            ],
+            'jingyingfengxian': [
+                { id: 'RISK-001', name: '企业欠税公告查询', desc: '查询企业欠税公告信息，包括纳税人识别号、欠税税种、欠税金额、欠税所属期及税务机关。', method: 'GET', path: '/v1/risk/own-tax' },
+                { id: 'RISK-002', name: '企业环保处罚查询', desc: '查询企业环保违规处罚记录，包括违规内容、处罚金额、处罚机关及处罚日期。', method: 'GET', path: '/v1/risk/env-punishment' },
+                { id: 'RISK-003', name: '企业重大税收违法查询', desc: '查询企业重大税收违法失信案件信息，包括违法事由、处理结果、处理机关及公告日期。', method: 'GET', path: '/v1/risk/tax-violation' },
+                { id: 'RISK-004', name: '企业税务非正常户查询', desc: '查询企业被认定为税务非正常户的记录信息，包括认定日期、认定机关及处理状态。', method: 'GET', path: '/v1/risk/tax-abnormal' },
+                { id: 'RISK-005', name: '企业风险综合评估', desc: '综合返回企业的经营风险评估结果，包括司法风险数量、经营异常状态、欠税记录及风险评分。', method: 'GET', path: '/v1/risk/comprehensive' }
+            ],
+            'qiyefazhan': [
+                { id: 'DEV-001', name: '企业融资历史查询', desc: '查询企业历次融资信息，包括融资轮次、融资金额、融资时间、投资机构及投后估值。', method: 'GET', path: '/v1/develop/financing' },
+                { id: 'DEV-002', name: '企业投资事件查询', desc: '查询企业作为投资方的对外投资事件信息，包括被投企业名称、投资金额、投资比例及投资轮次。', method: 'GET', path: '/v1/develop/investment' },
+                { id: 'DEV-003', name: '企业核心团队查询', desc: '查询企业核心管理团队信息，包括姓名、职务、教育背景及工作履历。', method: 'GET', path: '/v1/develop/core-team' },
+                { id: 'DEV-004', name: '企业资质荣誉查询', desc: '查询企业获得的荣誉称号及资质认证，包括荣誉名称、颁发机构及获得时间。', method: 'GET', path: '/v1/develop/honor' },
+                { id: 'DEV-005', name: '企业票据承兑信用查询', desc: '查询企业票据承兑信用信息，包括承兑票据类型、金额规模、逾期情况及信用评级。', method: 'GET', path: '/v1/develop/bill-acceptance' }
+            ],
+            'shangshigongsi': [
+                { id: 'STK-001', name: '上市公司基本信息查询', desc: '查询上市公司基本信息，包括股票代码、上市交易所、上市日期、行业分类及市值信息。', method: 'GET', path: '/v1/stock/basic', hot: true },
+                { id: 'STK-002', name: '上市公司高管信息查询', desc: '查询上市公司高管人员信息，包括姓名、职务、薪酬、持股数量及简历信息。', method: 'GET', path: '/v1/stock/executive' },
+                { id: 'STK-003', name: '上市公司股东信息查询', desc: '查询上市公司十大股东及十大流通股东信息，包括股东名称、持股数量、持股比例及持股变动。', method: 'GET', path: '/v1/stock/shareholder' },
+                { id: 'STK-004', name: '上市公司财务报表查询', desc: '查询上市公司财务报表数据，包括资产负债表、利润表、现金流量表主要指标。', method: 'GET', path: '/v1/stock/financial' },
+                { id: 'STK-005', name: '上市公司分红配股查询', desc: '查询上市公司历史分红派息及配股情况，包括每股分红、分红金额及实施日期。', method: 'GET', path: '/v1/stock/dividend' }
+            ],
+            'jianzhushichang': [
+                { id: 'CONS-001', name: '建筑工程企业备案查询', desc: '查询建筑相关企业在建筑市场监管平台的备案信息，包括企业基本信息及备案状态。', method: 'GET', path: '/v1/construction/enterprise-record' },
+                { id: 'CONS-002', name: '建筑工程资质查询', desc: '查询企业持有的建筑工程资质信息，包括资质序列、资质名称、证书编号、有效期及发证机关。', method: 'GET', path: '/v1/construction/qualification', hot: true },
+                { id: 'CONS-003', name: '建筑工程注册人员查询', desc: '查询企业工程注册人员信息，包括姓名、注册类别、注册号、执业单位及有效期。', method: 'GET', path: '/v1/construction/personnel' },
+                { id: 'CONS-004', name: '工程项目业绩查询', desc: '查询企业承建工程项目业绩信息，包括项目名称、项目类型、合同金额、竣工日期及建设单位。', method: 'GET', path: '/v1/construction/project-performance' },
+                { id: 'CONS-005', name: '公路工程项目业绩查询', desc: '查询企业公路工程项目业绩信息（来源：公路工程信息平台），包括项目名称、合同金额、项目状态及交工日期。', method: 'GET', path: '/v1/construction/highway-performance' },
+                { id: 'CONS-006', name: '水利工程项目业绩查询', desc: '查询企业水利工程项目业绩信息（来源：水利部信息平台），包括项目名称、合同金额、项目状态及验收日期。', method: 'GET', path: '/v1/construction/water-performance' },
+                { id: 'CONS-007', name: '建筑企业信用评分查询', desc: '查询建筑工程企业信用评分信息，包括综合评分、各维度得分及评分来源平台。', method: 'GET', path: '/v1/construction/credit-score' },
+                { id: 'CONS-008', name: '建筑企业诚信信息查询', desc: '查询建筑企业诚信档案信息，包括良好行为记录、不良行为记录及奖惩情况。', method: 'GET', path: '/v1/construction/integrity' },
+                { id: 'CONS-009', name: '建筑企业荣誉查询', desc: '查询建筑企业在建筑市场获得的荣誉奖项信息，包括奖项名称、子项奖项及获奖时间。', method: 'GET', path: '/v1/construction/honor' },
+                { id: 'CONS-010', name: '围标串标记录查询', desc: '查询企业涉及围标串标的违规记录，包括项目名称、公告日期、违规类型及处罚结果。', method: 'GET', path: '/v1/construction/bid-collusion' },
+                { id: 'CONS-011', name: '建筑资质撤销记录查询', desc: '查询建筑企业资质被撤销的处罚记录，包括资质名称、撤销原因、撤销机关及撤销日期。', method: 'GET', path: '/v1/construction/qualification-revoke' },
+                { id: 'CONS-012', name: '建筑资质注销记录查询', desc: '查询建筑企业资质注销记录，包括资质名称、注销原因及注销日期。', method: 'GET', path: '/v1/construction/qualification-cancel' },
+                { id: 'CONS-013', name: '建筑市场不良行为查询', desc: '查询企业在建筑市场中的不良行为记录，包括违规内容、处罚类型、处罚金额及公示状态。', method: 'GET', path: '/v1/construction/misconduct' }
+            ],
+            'xinyongzhongguo': [
+                { id: 'CC-001', name: '信用中国-行政处罚查询', desc: '查询信用中国平台收录的行政处罚信息，包括处罚决定文书号、违法行为、处罚内容及处罚机关。', method: 'GET', path: '/v1/creditchina/punishment', hot: true },
+                { id: 'CC-002', name: '信用中国-行政许可查询', desc: '查询信用中国平台收录的行政许可信息，包括许可证编号、许可项目、有效期及许可机关。', method: 'GET', path: '/v1/creditchina/license' }
+            ],
+            'teshuzhuti': [
+                { id: 'SP-001', name: '事业单位信息查询', desc: '查询事业单位基本登记信息，包括单位名称、主管部门、批准成立日期及经费来源。', method: 'GET', path: '/v1/special/public-institution' },
+                { id: 'SP-002', name: '社会组织信息查询', desc: '查询社会组织（社会团体/民办非企业单位/基金会）基本信息，包括组织名称、登记状态、业务范围及法定代表人。', method: 'GET', path: '/v1/special/social-organization' },
+                { id: 'SP-003', name: '律师事务所信息查询', desc: '查询律师事务所基本信息，包括事务所名称、律师人数、执业证号及负责人。', method: 'GET', path: '/v1/special/law-office' },
+                { id: 'SP-004', name: '香港企业信息查询', desc: '查询在大陆登记的香港企业基本信息，包括企业名称、注册地、注册资本及法定代表人。', method: 'GET', path: '/v1/special/hongkong-company' }
+            ],
+            'tongyong': [
+                { id: 'COMM-001', name: '企业名称模糊搜索', desc: '根据关键词模糊搜索企业名称，返回匹配的企业列表，适用于前端自动补全及企业检索场景。', method: 'GET', path: '/v1/common/search', hot: true },
+                { id: 'COMM-002', name: '企业年报查询（比地）', desc: '查询企业工商年报综合信息（来源：比地数据），包括企业基本信息、资产状况、社保信息及对外投资。', method: 'GET', path: '/v1/common/annual-report' }
+            ]
+        };
+
+        // 当前选中的分类
+        let currentCategory = 'all';
+        let currentPage = 1;
+        const pageSize = 10;
+        let searchKeyword = '';
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategoryList();
+            renderAPIList();
+            
+            // 搜索框回车事件
+            document.getElementById('searchInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchAPI();
+                }
+            });
+        });
+
+        // 渲染左侧分类列表
+        function renderCategoryList() {
+            const container = document.getElementById('categoryList');
+            let html = '';
+            
+            categories.forEach(cat => {
+                const isActive = cat.id === currentCategory ? 'active' : '';
+                html += `
+                    <div class="category-item ${isActive}" onclick="selectCategory('${cat.id}')">
+                        <div class="category-icon" style="background: ${cat.color}15; color: ${cat.color};">
+                            <i class="fas ${cat.icon}"></i>
+                        </div>
+                        <div class="category-info">
+                            <div class="category-name">${cat.name}</div>
+                            <div class="category-num">${cat.count}个接口</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+
+        // 选择分类
+        function selectCategory(categoryId) {
+            currentCategory = categoryId;
+            currentPage = 1;
+            searchKeyword = '';
+            document.getElementById('searchInput').value = '';
+            renderCategoryList();
+            renderAPIList();
+        }
+
+        // 搜索接口
+        function searchAPI() {
+            searchKeyword = document.getElementById('searchInput').value.trim().toLowerCase();
+            currentPage = 1;
+            renderAPIList();
+        }
+
+        // 获取所有接口（用于搜索）
+        function getAllAPIs() {
+            let allAPIs = [];
+            Object.keys(apiData).forEach(categoryId => {
+                const category = categories.find(c => c.id === categoryId);
+                apiData[categoryId].forEach(api => {
+                    allAPIs.push({ ...api, categoryId, categoryName: category ? category.name : '' });
+                });
+            });
+            return allAPIs;
+        }
+
+        // 渲染接口列表
+        function renderAPIList() {
+            const container = document.getElementById('apiList');
+            let apis = [];
+            
+            if (searchKeyword) {
+                // 搜索模式
+                const allAPIs = getAllAPIs();
+                apis = allAPIs.filter(api => 
+                    api.name.toLowerCase().includes(searchKeyword) ||
+                    api.id.toLowerCase().includes(searchKeyword) ||
+                    api.desc.toLowerCase().includes(searchKeyword)
+                );
+            } else if (currentCategory === 'all') {
+                // 全部接口
+                apis = getAllAPIs();
+            } else {
+                // 特定分类
+                const category = categories.find(c => c.id === currentCategory);
+                apis = (apiData[currentCategory] || []).map(api => ({
+                    ...api,
+                    categoryId: currentCategory,
+                    categoryName: category ? category.name : ''
+                }));
+            }
+            
+            // 分页
+            const totalPages = Math.ceil(apis.length / pageSize);
+            const start = (currentPage - 1) * pageSize;
+            const pageData = apis.slice(start, start + pageSize);
+            
+            // 渲染接口卡片
+            let html = '';
+            pageData.forEach(api => {
+                const hotTag = api.hot ? '<span class="api-tag tag-hot"><i class="fas fa-fire mr-1"></i>热门</span>' : '';
+                const methodTag = `<span class="api-tag tag-method">${api.method}</span>`;
+                
+                html += `
+                    <div class="api-card" onclick="showDetail('${api.id}', '${api.categoryId || currentCategory}')">
+                        <div class="api-header">
+                            <div class="api-title-section">
+                                <div class="api-icon" style="background: ${getIconColor(api.categoryId || currentCategory)}20; color: ${getIconColor(api.categoryId || currentCategory)};">
+                                    <i class="fas ${getCategoryIcon(api.categoryId || currentCategory)}"></i>
+                                </div>
+                                <div>
+                                    <div class="api-name">${api.name}</div>
+                                </div>
+                            </div>
+                            <div class="api-tags">
+                                ${methodTag}
+                                ${hotTag}
+                            </div>
+                        </div>
+                        <div class="api-desc">${api.desc}</div>
+                        <div class="api-footer">
+                            <div class="api-meta">
+                                <div class="api-meta-item">
+                                    <i class="fas fa-hashtag"></i>
+                                    <span class="meta-label">接口编号</span>
+                                    <span>${api.id}</span>
+                                </div>
+                                <div class="api-meta-item">
+                                    <i class="fas fa-folder"></i>
+                                    <span class="meta-label">所属分类</span>
+                                    <span>${api.categoryName}</span>
+                                </div>
+                            </div>
+                            <div class="api-actions" onclick="event.stopPropagation()">
+                                <button class="btn-detail" onclick="showDetail('${api.id}', '${api.categoryId || currentCategory}')">查看详情</button>
+                                <button class="btn-apply" onclick="openApplyModal('${api.name}')">申请接口</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            if (apis.length === 0) {
+                html = `
+                    <div style="text-align: center; padding: 60px; color: #999;">
+                        <i class="fas fa-search" style="font-size: 48px; margin-bottom: 16px; opacity: 0.3;"></i>
+                        <p>未找到匹配的接口</p>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = html;
+            
+            // 渲染分页
+            renderPagination(totalPages, apis.length);
+        }
+
+        // 获取分类图标颜色
+        function getIconColor(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.color : '#1890ff';
+        }
+
+        // 获取分类图标
+        function getCategoryIcon(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.icon : 'fa-plug';
+        }
+
+        // 渲染分页
+        function renderPagination(totalPages, totalItems) {
+            const container = document.getElementById('pagination');
+            
+            if (totalPages <= 1) {
+                container.innerHTML = '';
+                return;
+            }
+            
+            let html = `
+                <button onclick="goToPage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            `;
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+                    const active = i === currentPage ? 'active' : '';
+                    html += `<button class="${active}" onclick="goToPage(${i})">${i}</button>`;
+                } else if (i === currentPage - 3 || i === currentPage + 3) {
+                    html += '<span style="padding: 8px;">...</span>';
+                }
+            }
+            
+            html += `
+                <button onclick="goToPage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            `;
+            
+            container.innerHTML = html;
+        }
+
+        // 跳转到指定页
+        function goToPage(page) {
+            currentPage = page;
+            renderAPIList();
+        }
+
+        // 显示接口详情
+        function showDetail(apiId, categoryId) {
+            let api = null;
+            let category = null;
+            
+            if (categoryId && apiData[categoryId]) {
+                api = apiData[categoryId].find(a => a.id === apiId);
+                category = categories.find(c => c.id === categoryId);
+            }
+            
+            if (!api) {
+                // 在所有分类中查找
+                for (const [catId, apis] of Object.entries(apiData)) {
+                    api = apis.find(a => a.id === apiId);
+                    if (api) {
+                        category = categories.find(c => c.id === catId);
+                        break;
+                    }
+                }
+            }
+            
+            if (!api) return;
+            
+            document.getElementById('modalTitle').textContent = api.name;
+            document.getElementById('modalSubtitle').textContent = `接口ID: ${api.id}`;
+            document.getElementById('detailCategory').textContent = category ? category.name : '-';
+            document.getElementById('detailMethod').textContent = api.method;
+            document.getElementById('detailId').textContent = api.id;
+            document.getElementById('detailPath').textContent = api.path;
+            document.getElementById('detailDesc').textContent = api.desc;
+            
+            // 重置标签页
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelector('.tab').classList.add('active');
+            document.getElementById('apiInfo').classList.add('active');
+            
+            openModal('detailModal');
+        }
+
+        // 打开申请弹窗
+        function openApplyModal(apiName) {
+            document.getElementById('applyApiName').textContent = apiName || '';
+            openModal('applyModal');
+        }
+
+        // 提交申请
+        function submitApply() {
+            const form = document.getElementById('applyForm');
+            if (form.checkValidity()) {
+                alert('申请提交成功！我们会尽快与您联系。');
+                closeModal('applyModal');
+                form.reset();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // 打开弹窗
+        function openModal(modalId) {
+            document.getElementById(modalId).classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // 切换标签
+        function switchTab(tab, contentId) {
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            
+            tab.classList.add('active');
+            document.getElementById(contentId).classList.add('active');
+        }
+
+        // 点击弹窗外部关闭
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
