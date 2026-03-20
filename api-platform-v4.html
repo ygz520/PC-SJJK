@@ -1,0 +1,1213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比地招标网 - 企业数据API开放平台</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap');
+        
+        * {
+            font-family: 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+        
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --sidebar-bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+        
+        body {
+            background-color: #f1f5f9;
+        }
+        
+        /* 顶部导航 */
+        .top-nav {
+            background: #fff;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .nav-item {
+            position: relative;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            color: #64748b;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .nav-item:hover {
+            color: var(--primary);
+        }
+        
+        .nav-item.active {
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 20px;
+            right: 20px;
+            height: 2px;
+            background: var(--primary);
+        }
+        
+        /* 左侧目录树 */
+        .category-tree {
+            background: #fff;
+            border-right: 1px solid var(--border);
+        }
+        
+        .tree-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+        
+        .tree-item:hover {
+            background: #f8fafc;
+            color: var(--primary);
+        }
+        
+        .tree-item.active {
+            background: #eff6ff;
+            color: var(--primary);
+            border-left-color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .tree-item i {
+            width: 20px;
+            margin-right: 8px;
+            text-align: center;
+        }
+        
+        .tree-arrow {
+            margin-left: auto;
+            transition: transform 0.2s;
+        }
+        
+        .tree-arrow.expanded {
+            transform: rotate(90deg);
+        }
+        
+        /* 子分类 */
+        .sub-tree {
+            display: none;
+            background: #fafafa;
+        }
+        
+        .sub-tree.show {
+            display: block;
+        }
+        
+        .sub-tree .tree-item {
+            padding-left: 44px;
+            font-size: 13px;
+        }
+        
+        /* 接口卡片 */
+        .api-card {
+            background: #fff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s;
+        }
+        
+        .api-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.1);
+        }
+        
+        .api-icon {
+            width: 56px;
+            height: 56px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            flex-shrink: 0;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+        
+        .tag-hot {
+            background: #fef2f2;
+            color: #dc2626;
+        }
+        
+        .tag-new {
+            background: #f0fdf4;
+            color: #16a34a;
+        }
+        
+        .tag-recommend {
+            background: #fffbeb;
+            color: #d97706;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+        
+        .btn-outline {
+            background: #fff;
+            color: var(--primary);
+            padding: 8px 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            border: 1px solid var(--primary);
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-outline:hover {
+            background: #eff6ff;
+        }
+        
+        /* 搜索框 */
+        .search-box {
+            background: #f1f5f9;
+            border: 1px solid transparent;
+            border-radius: 8px;
+            padding: 10px 16px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus-within {
+            background: #fff;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .search-box input {
+            border: none;
+            background: transparent;
+            outline: none;
+            flex: 1;
+            margin-left: 10px;
+            font-size: 14px;
+        }
+        
+        /* 统计数字 */
+        .stat-num {
+            color: #94a3b8;
+            font-size: 13px;
+            margin-left: auto;
+        }
+        
+        /* 方法标签 */
+        .method-tag {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .method-get {
+            background: #dcfce7;
+            color: #166534;
+        }
+        
+        .method-post {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        /* 弹窗样式 */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-overlay.show {
+            display: flex;
+        }
+        
+        .modal-content {
+            background: #fff;
+            border-radius: 12px;
+            max-width: 800px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .modal-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .modal-body {
+            padding: 24px;
+        }
+        
+        .modal-footer {
+            padding: 16px 24px;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        /* 代码块样式 */
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            line-height: 1.6;
+        }
+        
+        .code-block .key {
+            color: #93c5fd;
+        }
+        
+        .code-block .string {
+            color: #86efac;
+        }
+        
+        .code-block .number {
+            color: #fca5a5;
+        }
+
+        /* 表格样式 */
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        .param-table th,
+        .param-table td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+        
+        .param-table th {
+            background: #f8fafc;
+            font-weight: 600;
+            color: #475569;
+            font-size: 13px;
+        }
+        
+        .param-table td {
+            font-size: 14px;
+            color: #334155;
+        }
+        
+        .param-table tr:hover {
+            background: #f8fafc;
+        }
+
+        /* 分页样式 */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 24px;
+        }
+        
+        .pagination button {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            background: #fff;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 14px;
+        }
+        
+        .pagination button:hover:not(:disabled) {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .pagination button.active {
+            background: var(--primary);
+            color: #fff;
+            border-color: var(--primary);
+        }
+        
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* 标签页样式 */
+        .tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border);
+            margin-bottom: 20px;
+        }
+        
+        .tab {
+            padding: 12px 20px;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            font-size: 14px;
+            color: #64748b;
+        }
+        
+        .tab:hover {
+            color: var(--primary);
+        }
+        
+        .tab.active {
+            color: var(--primary);
+            border-bottom-color: var(--primary);
+            font-weight: 500;
+        }
+
+        /* 表单样式 */
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+        
+        .form-textarea {
+            width: 100%;
+            padding: 10px 14px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 14px;
+            resize: vertical;
+            min-height: 100px;
+            transition: all 0.3s;
+        }
+        
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航 - 参考后台界面样式 -->
+    <header class="top-nav sticky top-0 z-50" style="background: #fff; border-bottom: 1px solid #e8e8e8;">
+        <div class="flex items-center justify-between px-4" style="height: 60px;">
+            <!-- 左侧Logo -->
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
+                    <i class="fas fa-building text-white"></i>
+                </div>
+                <div>
+                    <h1 class="font-bold text-base text-slate-800">广州比地数据科技有限公司</h1>
+                </div>
+                <div class="ml-4 text-slate-400">
+                    <i class="fas fa-bars"></i>
+                </div>
+            </div>
+            
+            <!-- 中间导航菜单 -->
+            <nav class="flex items-center gap-6" style="font-size: 14px;">
+                <div class="nav-item" onclick="showPage('intro')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-star text-yellow-500 mr-1"></i>功能介绍
+                </div>
+                <div class="nav-item" onclick="showPage('api')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-bell text-red-500 mr-1"></i>招标订阅
+                </div>
+                <div class="nav-item" onclick="showPage('search')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-search text-blue-500 mr-1"></i>招投标查询
+                </div>
+                <div class="nav-item active dropdown" onclick="toggleDataCenterDropdown(event)" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #1890ff; cursor: pointer; transition: all 0.3s; position: relative;">
+                    <i class="fas fa-database text-purple-500 mr-1"></i>数据中心
+                    <i class="fas fa-caret-down ml-1" id="dataCenterArrow"></i>
+                    <!-- 数据中心下拉菜单 -->
+                    <div class="dropdown-menu" id="dataCenterDropdown" style="display: none; position: absolute; top: 60px; left: 0; background: #fff; border: 1px solid #e8e8e8; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 160px; z-index: 1000;">
+                        <div class="dropdown-item" onclick="showPage('data-export')" style="padding: 10px 16px; color: #666; cursor: pointer; font-size: 14px; transition: all 0.3s; border-bottom: 1px solid #f0f0f0;">招投标数据导出</div>
+                        <div class="dropdown-item" onclick="showPage('enterprise-report')" style="padding: 10px 16px; color: #666; cursor: pointer; font-size: 14px; transition: all 0.3s; border-bottom: 1px solid #f0f0f0;">企业报告下载</div>
+                        <div class="dropdown-item" onclick="showPage('industry-report')" style="padding: 10px 16px; color: #666; cursor: pointer; font-size: 14px; transition: all 0.3s; border-bottom: 1px solid #f0f0f0;">行业报告下载</div>
+                        <div class="dropdown-item" onclick="showPage('industry-rank')" style="padding: 10px 16px; color: #666; cursor: pointer; font-size: 14px; transition: all 0.3s; border-bottom: 1px solid #f0f0f0;">行业排行榜</div>
+                        <div class="dropdown-item" onclick="showPage('api')" style="padding: 10px 16px; color: #1890ff; cursor: pointer; font-size: 14px; transition: all 0.3s;">API对接</div>
+                    </div>
+                </div>
+                <div class="nav-item" onclick="showPage('service')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-headset text-green-500 mr-1"></i>服务中心
+                    <i class="fas fa-caret-down ml-1"></i>
+                </div>
+                <div class="nav-item" onclick="showPage('vip')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-crown text-yellow-500 mr-1"></i>升级会员
+                </div>
+                <div class="nav-item" onclick="showPage('website')" style="padding: 0 8px; height: 60px; display: flex; align-items: center; color: #666; cursor: pointer; transition: all 0.3s;">
+                    <i class="fas fa-external-link-alt text-blue-500 mr-1"></i>前往官网
+                </div>
+            </nav>
+            
+            <!-- 右侧操作 -->
+            <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2 px-3 py-1 rounded" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-size: 13px;">
+                    <i class="fas fa-gem"></i>
+                    <span>VIP会员</span>
+                </div>
+                <div class="flex items-center gap-2 cursor-pointer" style="font-size: 14px; color: #666;">
+                    <i class="fas fa-user-circle text-lg"></i>
+                    <span>振兴机械</span>
+                    <i class="fas fa-caret-down"></i>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex" style="height: calc(100vh - 61px);">
+        <!-- 左侧分类目录 -->
+        <aside class="category-tree w-72 overflow-y-auto flex-shrink-0">
+            <div class="p-4 border-b border-slate-200">
+                <h2 class="font-semibold text-slate-800">接口目录</h2>
+                <p class="text-sm text-slate-500 mt-1">共 12 个分类，238 个接口</p>
+            </div>
+            
+            <div class="py-2" id="categoryTree">
+                <!-- 分类将通过JS动态生成 -->
+            </div>
+        </aside>
+
+        <!-- 右侧内容区 -->
+        <main class="flex-1 overflow-y-auto p-6" id="mainContent">
+            <!-- 内容将通过JS动态生成 -->
+        </main>
+    </div>
+
+    <!-- 接口详情弹窗 -->
+    <div class="modal-overlay" id="detailModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
+                        <i class="fas fa-info-circle text-blue-600"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold text-slate-800" id="modalTitle">接口详情</h3>
+                        <p class="text-sm text-slate-500" id="modalSubtitle">接口ID: IC-001</p>
+                    </div>
+                </div>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('detailModal')">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs">
+                    <div class="tab active" onclick="switchTab(this, 'apiInfo')">接口信息</div>
+                    <div class="tab" onclick="switchTab(this, 'requestParams')">请求参数</div>
+                    <div class="tab" onclick="switchTab(this, 'responseParams')">返回参数</div>
+                    <div class="tab" onclick="switchTab(this, 'example')">示例代码</div>
+                </div>
+                
+                <div id="apiInfo" class="tab-content">
+                    <div class="grid grid-cols-2 gap-4 mb-6">
+                        <div class="bg-slate-50 p-4 rounded-lg">
+                            <p class="text-sm text-slate-500 mb-1">所属分类</p>
+                            <p class="font-medium text-slate-800" id="detailCategory">工商信息</p>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg">
+                            <p class="text-sm text-slate-500 mb-1">请求方式</p>
+                            <span class="method-tag method-get">GET</span>
+                        </div>
+                        <div class="bg-slate-50 p-4 rounded-lg">
+                            <p class="text-sm text-slate-500 mb-1">接口价格</p>
+                            <p class="font-medium text-red-500">¥0.15/次</p>
+                        </div>
+
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-slate-500 mb-2">接口描述</p>
+                        <p class="text-slate-700" id="detailDesc">查询企业的基本工商信息，包括企业名称、统一社会信用代码、法定代表人、注册资本、成立日期、经营状态等。</p>
+                    </div>
+                    <div class="mb-4">
+                        <p class="text-sm text-slate-500 mb-2">接口地址</p>
+                        <div class="code-block">https://api.bidizhaobiao.com/v1/enterprise/baseInfo</div>
+                    </div>
+                </div>
+                
+                <div id="requestParams" class="tab-content" style="display: none;">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>必填</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>keyword</td>
+                                <td>string</td>
+                                <td>是</td>
+                                <td>企业名称、注册号或统一社会信用代码</td>
+                            </tr>
+                            <tr>
+                                <td>page</td>
+                                <td>int</td>
+                                <td>否</td>
+                                <td>页码，默认1</td>
+                            </tr>
+                            <tr>
+                                <td>pageSize</td>
+                                <td>int</td>
+                                <td>否</td>
+                                <td>每页条数，默认20，最大100</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="responseParams" class="tab-content" style="display: none;">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>类型</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>code</td>
+                                <td>int</td>
+                                <td>状态码，200表示成功</td>
+                            </tr>
+                            <tr>
+                                <td>message</td>
+                                <td>string</td>
+                                <td>返回信息</td>
+                            </tr>
+                            <tr>
+                                <td>data</td>
+                                <td>object</td>
+                                <td>企业工商信息数据</td>
+                            </tr>
+                            <tr>
+                                <td>data.name</td>
+                                <td>string</td>
+                                <td>企业名称</td>
+                            </tr>
+                            <tr>
+                                <td>data.creditCode</td>
+                                <td>string</td>
+                                <td>统一社会信用代码</td>
+                            </tr>
+                            <tr>
+                                <td>data.legalPerson</td>
+                                <td>string</td>
+                                <td>法定代表人</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div id="example" class="tab-content" style="display: none;">
+                    <p class="text-sm text-slate-500 mb-2">请求示例</p>
+                    <div class="code-block mb-4">
+<span class="key">GET</span> https://api.bidizhaobiao.com/v1/enterprise/baseInfo?keyword=北京比地数据科技有限公司
+                    </div>
+                    <p class="text-sm text-slate-500 mb-2">响应示例</p>
+                    <div class="code-block">
+{
+  <span class="key">"code"</span>: <span class="number">200</span>,
+  <span class="key">"message"</span>: <span class="string">"success"</span>,
+  <span class="key">"data"</span>: {
+    <span class="key">"name"</span>: <span class="string">"北京比地数据科技有限公司"</span>,
+    <span class="key">"creditCode"</span>: <span class="string">"91110108MA00123456"</span>,
+    <span class="key">"legalPerson"</span>: <span class="string">"张三"</span>,
+    <span class="key">"registeredCapital"</span>: <span class="string">"1000万元"</span>,
+    <span class="key">"establishDate"</span>: <span class="string">"2015-06-18"</span>,
+    <span class="key">"status"</span>: <span class="string">"存续"</span>
+  }
+}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="closeModal('detailModal')">关闭</button>
+                <button class="btn-primary" onclick="openApplyModal()">申请接口</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 申请接口弹窗 -->
+    <div class="modal-overlay" id="applyModal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h3 class="text-lg font-semibold text-slate-800">申请接口</h3>
+                <button class="text-slate-400 hover:text-slate-600" onclick="closeModal('applyModal')">
+                    <i class="fas fa-times text-xl"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="bg-blue-50 p-4 rounded-lg mb-6">
+                    <p class="text-sm text-blue-800">
+                        <i class="fas fa-info-circle mr-2"></i>
+                        您正在申请 <strong id="applyApiName">企业工商基本信息查询</strong> 接口
+                    </p>
+                </div>
+                <form id="applyForm">
+                    <div class="form-group">
+                        <label class="form-label">联系人 <span class="text-red-500">*</span></label>
+                        <input type="text" class="form-input" placeholder="请输入联系人姓名" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">联系电话 <span class="text-red-500">*</span></label>
+                        <input type="tel" class="form-input" placeholder="请输入联系电话" required>
+                    </div>
+                </form>
+                <div class="mt-6 pt-4 border-t border-slate-200 text-center">
+                    <p class="text-sm text-slate-600">
+                        <i class="fas fa-phone-alt text-blue-500 mr-2"></i>
+                        官方客服电话：<span class="text-blue-600 font-semibold text-lg">400-999-4928</span>
+                    </p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-outline" onclick="closeModal('applyModal')">取消</button>
+                <button class="btn-primary" onclick="submitApply()">提交申请</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // API分类数据
+        const categories = [
+            { id: 'gongshang', name: '工商信息', icon: 'fa-building', color: 'blue', count: 22 },
+            { id: 'sifa', name: '司法风险', icon: 'fa-gavel', color: 'red', count: 23 },
+            { id: 'jingying', name: '经营风险', icon: 'fa-exclamation-triangle', color: 'orange', count: 18 },
+            { id: 'zhishi', name: '知识产权', icon: 'fa-lightbulb', color: 'purple', count: 15 },
+            { id: 'zhaobiao', name: '招标信息', icon: 'fa-handshake', color: 'cyan', count: 35 },
+            { id: 'zhongbiao', name: '中标信息', icon: 'fa-trophy', color: 'yellow', count: 28 },
+            { id: 'guanxi', name: '企业关系', icon: 'fa-project-diagram', color: 'indigo', count: 12 },
+            { id: 'lishi', name: '历史信息', icon: 'fa-history', color: 'slate', count: 20 },
+            { id: 'caishui', name: '财税信息', icon: 'fa-calculator', color: 'green', count: 16 },
+            { id: 'renli', name: '人力资源', icon: 'fa-users', color: 'pink', count: 14 },
+            { id: 'tese', name: '特色服务', icon: 'fa-gem', color: 'rose', count: 18 },
+            { id: 'qita', name: '其他接口', icon: 'fa-ellipsis-h', color: 'gray', count: 17 }
+        ];
+
+        // API接口数据
+        const apiData = {
+            'gongshang': [
+                { id: 'IC-001', name: '企业工商基本信息查询', desc: '查询企业的基本工商信息，包括企业名称、统一社会信用代码、法定代表人、注册资本、成立日期、经营状态等。', price: '0.15', calls: '85.2万+', method: 'GET', hot: true },
+                { id: 'IC-002', name: '企业分支机构查询', desc: '查询企业的分支机构信息，包括分公司、子公司等关联企业的详细信息。', price: '0.12', calls: '32.1万+', method: 'GET' },
+                { id: 'IC-003', name: '企业变更记录查询', desc: '查询企业的工商变更记录，包括法人变更、股东变更、注册资本变更、经营范围变更等历史记录。', price: '0.15', calls: '28.5万+', method: 'GET' },
+                { id: 'IC-004', name: '企业主要人员查询', desc: '查询企业的主要人员信息，包括董事、监事、高级管理人员等。', price: '0.10', calls: '45.6万+', method: 'GET' },
+                { id: 'IC-005', name: '企业曾用名查询', desc: '查询企业的历史名称变更记录，了解企业名称演变过程。', price: '0.08', calls: '15.3万+', method: 'GET' },
+                { id: 'IC-006', name: '企业股东信息查询', desc: '查询企业的股东信息，包括股东名称、持股比例、认缴出资额等。', price: '0.12', calls: '52.8万+', method: 'GET', hot: true },
+                { id: 'IC-007', name: '企业对外投资查询', desc: '查询企业的对外投资信息，包括投资企业名称、投资金额、持股比例等。', price: '0.12', calls: '22.4万+', method: 'GET' },
+                { id: 'IC-008', name: '企业工商快照查询', desc: '获取企业工商信息的快照，包含企业营业执照等影像资料。', price: '0.20', calls: '18.6万+', method: 'GET' },
+                { id: 'IC-009', name: '企业经营范围查询', desc: '查询企业的经营范围信息，支持按行业分类筛选。', price: '0.08', calls: '12.3万+', method: 'GET' },
+                { id: 'IC-010', name: '企业注册地址查询', desc: '查询企业的注册地址信息，支持地址标准化和地理位置解析。', price: '0.08', calls: '9.8万+', method: 'GET' },
+                { id: 'IC-011', name: '企业联系方式查询', desc: '查询企业的联系电话、邮箱、官网等联系方式。', price: '0.10', calls: '35.2万+', method: 'GET', recommend: true },
+                { id: 'IC-012', name: '企业年报信息查询', desc: '查询企业年度报告信息，包括资产状况、社保信息等。', price: '0.15', calls: '20.1万+', method: 'GET' },
+                { id: 'IC-013', name: '企业股权结构查询', desc: '查询企业的股权结构信息，包括直接股东和间接股东。', price: '0.18', calls: '16.7万+', method: 'GET' },
+                { id: 'IC-014', name: '企业工商异常查询', desc: '查询企业的经营异常名录信息，包括列入原因和移出日期。', price: '0.10', calls: '14.5万+', method: 'GET' },
+                { id: 'IC-015', name: '企业严重违法查询', desc: '查询企业的严重违法失信企业名单信息。', price: '0.10', calls: '8.9万+', method: 'GET' },
+                { id: 'IC-016', name: '企业股权出质查询', desc: '查询企业的股权出质登记信息。', price: '0.12', calls: '6.3万+', method: 'GET' },
+                { id: 'IC-017', name: '企业动产抵押查询', desc: '查询企业的动产抵押登记信息。', price: '0.12', calls: '5.8万+', method: 'GET' },
+                { id: 'IC-018', name: '企业行政许可查询', desc: '查询企业获得的行政许可信息。', price: '0.10', calls: '11.2万+', method: 'GET' },
+                { id: 'IC-019', name: '企业抽查检查查询', desc: '查询企业的抽查检查结果信息。', price: '0.08', calls: '7.5万+', method: 'GET' },
+                { id: 'IC-020', name: '企业清算信息查询', desc: '查询企业的清算组备案信息。', price: '0.10', calls: '3.2万+', method: 'GET' },
+                { id: 'IC-021', name: '企业简易注销查询', desc: '查询企业的简易注销公告信息。', price: '0.08', calls: '4.6万+', method: 'GET' },
+                { id: 'IC-022', name: '企业工商信息批量查询', desc: '支持批量查询多个企业的工商基本信息。', price: '0.50', calls: '25.3万+', method: 'POST', hot: true }
+            ],
+            'sifa': [
+                { id: 'SF-001', name: '企业被执行人查询', desc: '查询企业的被执行人信息，包括执行法院、案号、执行标的等。', price: '0.15', calls: '68.5万+', method: 'GET', hot: true },
+                { id: 'SF-002', name: '企业失信被执行人查询', desc: '查询企业的失信被执行人（老赖）信息。', price: '0.15', calls: '55.2万+', method: 'GET', hot: true },
+                { id: 'SF-003', name: '企业限制高消费查询', desc: '查询企业法定代表人被限制高消费的信息。', price: '0.12', calls: '32.8万+', method: 'GET' },
+                { id: 'SF-004', name: '企业司法拍卖查询', desc: '查询企业的司法拍卖信息，包括拍卖标的、起拍价等。', price: '0.12', calls: '15.6万+', method: 'GET' },
+                { id: 'SF-005', name: '企业裁判文书查询', desc: '查询企业的裁判文书信息，包括民事、刑事、行政案件。', price: '0.18', calls: '42.3万+', method: 'GET', recommend: true },
+                { id: 'SF-006', name: '企业开庭公告查询', desc: '查询企业的开庭公告信息。', price: '0.12', calls: '28.9万+', method: 'GET' },
+                { id: 'SF-007', name: '企业法院公告查询', desc: '查询企业的法院公告信息，包括送达公告、破产公告等。', price: '0.12', calls: '18.5万+', method: 'GET' },
+                { id: 'SF-008', name: '企业案件流程查询', desc: '查询企业涉诉案件的流程信息。', price: '0.15', calls: '22.1万+', method: 'GET' },
+                { id: 'SF-009', name: '企业终本案件查询', desc: '查询企业的终结本次执行程序案件信息。', price: '0.12', calls: '12.4万+', method: 'GET' },
+                { id: 'SF-010', name: '企业破产重整查询', desc: '查询企业的破产重整案件信息。', price: '0.15', calls: '5.8万+', method: 'GET' },
+                { id: 'SF-011', name: '企业股权冻结查询', desc: '查询企业股权被冻结的信息。', price: '0.12', calls: '14.2万+', method: 'GET' },
+                { id: 'SF-012', name: '企业司法协助查询', desc: '查询企业股权的司法协助执行信息。', price: '0.12', calls: '8.6万+', method: 'GET' },
+                { id: 'SF-013', name: '企业送达公告查询', desc: '查询企业的送达公告信息。', price: '0.10', calls: '6.3万+', method: 'GET' },
+                { id: 'SF-014', name: '企业诉前保全查询', desc: '查询企业的诉前保全信息。', price: '0.12', calls: '4.5万+', method: 'GET' },
+                { id: 'SF-015', name: '企业立案信息查询', desc: '查询企业的立案信息。', price: '0.12', calls: '19.8万+', method: 'GET' },
+                { id: 'SF-016', name: '企业司法判决查询', desc: '查询企业的司法判决结果信息。', price: '0.15', calls: '31.2万+', method: 'GET' },
+                { id: 'SF-017', name: '企业执行公告查询', desc: '查询企业的执行公告信息。', price: '0.10', calls: '7.9万+', method: 'GET' },
+                { id: 'SF-018', name: '企业催告公告查询', desc: '查询企业的催告公告信息。', price: '0.10', calls: '3.5万+', method: 'GET' },
+                { id: 'SF-019', name: '企业协助执行查询', desc: '查询企业的协助执行通知书信息。', price: '0.12', calls: '5.2万+', method: 'GET' },
+                { id: 'SF-020', name: '企业询价评估查询', desc: '查询企业的询价评估信息。', price: '0.10', calls: '2.8万+', method: 'GET' },
+                { id: 'SF-021', name: '企业司法拘留查询', desc: '查询企业法定代表人被司法拘留的信息。', price: '0.12', calls: '1.9万+', method: 'GET' },
+                { id: 'SF-022', name: '企业犯罪记录查询', desc: '查询企业及其法定代表人的犯罪记录信息。', price: '0.20', calls: '8.5万+', method: 'GET' },
+                { id: 'SF-023', name: '企业涉诉风险分析', desc: '综合分析企业的涉诉风险情况。', price: '0.50', calls: '12.6万+', method: 'POST', recommend: true }
+            ],
+            'jingying': [
+                { id: 'JY-001', name: '企业经营异常查询', desc: '查询企业的经营异常名录信息。', price: '0.10', calls: '38.5万+', method: 'GET' },
+                { id: 'JY-002', name: '企业行政处罚查询', desc: '查询企业受到的行政处罚信息。', price: '0.12', calls: '45.2万+', method: 'GET', hot: true },
+                { id: 'JY-003', name: '企业环保处罚查询', desc: '查询企业的环保行政处罚信息。', price: '0.12', calls: '12.8万+', method: 'GET' },
+                { id: 'JY-004', name: '企业税收违法查询', desc: '查询企业的税收违法案件信息。', price: '0.15', calls: '18.6万+', method: 'GET' },
+                { id: 'JY-005', name: '企业欠税公告查询', desc: '查询企业的欠税公告信息。', price: '0.12', calls: '9.3万+', method: 'GET' },
+                { id: 'JY-006', name: '企业海关信用查询', desc: '查询企业的海关信用等级信息。', price: '0.10', calls: '6.5万+', method: 'GET' },
+                { id: 'JY-007', name: '企业进出口信用查询', desc: '查询企业的进出口信用信息。', price: '0.12', calls: '8.2万+', method: 'GET' },
+                { id: 'JY-008', name: '企业产品质量抽查查询', desc: '查询企业的产品质量抽查结果。', price: '0.10', calls: '5.8万+', method: 'GET' },
+                { id: 'JY-009', name: '企业食品抽检查询', desc: '查询企业的食品安全抽检结果。', price: '0.10', calls: '4.2万+', method: 'GET' },
+                { id: 'JY-010', name: '企业经营状态查询', desc: '查询企业的经营状态信息。', price: '0.08', calls: '52.3万+', method: 'GET' },
+                { id: 'JY-011', name: '企业简易注销公告查询', desc: '查询企业的简易注销公告信息。', price: '0.08', calls: '7.5万+', method: 'GET' },
+                { id: 'JY-012', name: '企业清算组备案查询', desc: '查询企业的清算组备案信息。', price: '0.10', calls: '3.2万+', method: 'GET' },
+                { id: 'JY-013', name: '企业股权出质查询', desc: '查询企业的股权出质登记信息。', price: '0.12', calls: '11.5万+', method: 'GET' },
+                { id: 'JY-014', name: '企业动产抵押查询', desc: '查询企业的动产抵押登记信息。', price: '0.12', calls: '9.8万+', method: 'GET' },
+                { id: 'JY-015', name: '企业行政许可撤销查询', desc: '查询企业被撤销的行政许可信息。', price: '0.10', calls: '2.6万+', method: 'GET' },
+                { id: 'JY-016', name: '企业列入严重违法查询', desc: '查询企业被列入严重违法失信名单的信息。', price: '0.10', calls: '6.8万+', method: 'GET' },
+                { id: 'JY-017', name: '企业经营风险综合评估', desc: '综合评估企业的经营风险状况。', price: '0.80', calls: '15.2万+', method: 'POST', recommend: true },
+                { id: 'JY-018', name: '企业信用评级查询', desc: '查询企业的信用评级信息。', price: '0.30', calls: '22.5万+', method: 'GET', hot: true }
+            ]
+        };
+
+        // 当前选中的分类
+        let currentCategory = 'gongshang';
+        let currentPage = 1;
+        const pageSize = 10;
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', function() {
+            renderCategoryTree();
+            renderAPIList();
+        });
+
+        // 渲染分类目录树
+        function renderCategoryTree() {
+            const treeContainer = document.getElementById('categoryTree');
+            let html = '';
+            
+            categories.forEach(cat => {
+                const isActive = cat.id === currentCategory ? 'active' : '';
+                html += `
+                    <div class="tree-item ${isActive}" onclick="selectCategory('${cat.id}')">
+                        <i class="fas ${cat.icon} text-${cat.color}-500"></i>
+                        <span>${cat.name}</span>
+                        <span class="stat-num">(${cat.count})</span>
+                    </div>
+                `;
+            });
+            
+            treeContainer.innerHTML = html;
+        }
+
+        // 选择分类
+        function selectCategory(categoryId) {
+            currentCategory = categoryId;
+            currentPage = 1;
+            renderCategoryTree();
+            renderAPIList();
+        }
+
+        // 渲染API列表
+        function renderAPIList() {
+            const category = categories.find(c => c.id === currentCategory);
+            const apis = apiData[currentCategory] || [];
+            const mainContent = document.getElementById('mainContent');
+            
+            // 分页
+            const totalPages = Math.ceil(apis.length / pageSize);
+            const start = (currentPage - 1) * pageSize;
+            const end = start + pageSize;
+            const pageApis = apis.slice(start, end);
+            
+            let html = `
+                <!-- 当前分类标题 -->
+                <div class="flex items-center justify-between mb-6">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 bg-${category.color}-50 rounded-xl flex items-center justify-center">
+                            <i class="fas ${category.icon} text-${category.color}-600 text-xl"></i>
+                        </div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">${category.name}</h2>
+                            <p class="text-sm text-slate-500">共 ${category.count} 个接口</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-3">
+                        <select class="border border-slate-200 rounded-lg px-3 py-2 text-sm outline-none focus:border-blue-500" onchange="sortAPI(this.value)">
+                            <option value="default">综合排序</option>
+                            <option value="price">价格最低</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- 接口列表 -->
+                <div class="space-y-4">
+            `;
+            
+            pageApis.forEach((api, index) => {
+                const tags = [];
+                if (api.hot) tags.push('<span class="tag tag-hot">HOT</span>');
+                if (api.new) tags.push('<span class="tag tag-new">NEW</span>');
+                if (api.recommend) tags.push('<span class="tag tag-recommend">推荐</span>');
+                
+                const colors = ['blue', 'green', 'purple', 'orange', 'cyan', 'pink', 'indigo', 'red'];
+                const color = colors[index % colors.length];
+                
+                html += `
+                    <div class="api-card">
+                        <div class="flex items-start gap-5">
+                            <div class="api-icon bg-${color}-50 text-${color}-600">
+                                <i class="fas fa-plug"></i>
+                            </div>
+                            <div class="flex-1">
+                                <div class="flex items-center gap-3 mb-2">
+                                    <h3 class="text-lg font-semibold text-slate-800">${api.name}</h3>
+                                    ${tags.join('')}
+                                    <span class="method-tag method-${api.method.toLowerCase()}">${api.method}</span>
+                                </div>
+                                <p class="text-sm text-slate-500 mb-3">${api.desc}</p>
+                                <div class="flex items-center gap-6 text-sm">
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-slate-400">接口ID：</span>
+                                        <span class="font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded">${api.id}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-slate-400">所属分类：</span>
+                                        <span class="text-slate-600">${category.name}</span>
+                                    </div>
+                                    <div class="flex items-center gap-2">
+                                        <span class="text-slate-400">价格：</span>
+                                        <span class="text-red-500 font-semibold">¥${api.price}/次</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-2">
+                                <button class="btn-primary" onclick="openDetailModal('${api.id}')">查看详情</button>
+                                <button class="btn-outline" onclick="openApplyModal('${api.id}', '${api.name}')">申请接口</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            html += '</div>';
+            
+            // 分页
+            if (totalPages > 1) {
+                html += '<div class="pagination">';
+                html += `<button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}><i class="fas fa-chevron-left"></i></button>`;
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        html += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        html += '<span>...</span>';
+                    }
+                }
+                
+                html += `<button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}><i class="fas fa-chevron-right"></i></button>`;
+                html += '</div>';
+            }
+            
+            mainContent.innerHTML = html;
+        }
+
+        // 切换页面
+        function changePage(page) {
+            currentPage = page;
+            renderAPIList();
+        }
+
+        // 打开详情弹窗
+        function openDetailModal(apiId) {
+            const modal = document.getElementById('detailModal');
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 打开申请弹窗
+        function openApplyModal(apiId, apiName) {
+            closeModal('detailModal');
+            const modal = document.getElementById('applyModal');
+            if (apiName) {
+                document.getElementById('applyApiName').textContent = apiName;
+            }
+            modal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // 关闭弹窗
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            modal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // 切换标签页
+        function switchTab(tab, contentId) {
+            // 移除所有active类
+            document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(c => c.style.display = 'none');
+            
+            // 添加active类
+            tab.classList.add('active');
+            document.getElementById(contentId).style.display = 'block';
+        }
+
+        // 提交申请
+        function submitApply() {
+            const form = document.getElementById('applyForm');
+            if (form.checkValidity()) {
+                alert('申请已提交，我们将在1-3个工作日内审核！');
+                closeModal('applyModal');
+                form.reset();
+            } else {
+                form.reportValidity();
+            }
+        }
+
+        // 搜索API
+        function searchAPI(keyword) {
+            if (!keyword) {
+                renderAPIList();
+                return;
+            }
+            
+            const allApis = [];
+            Object.keys(apiData).forEach(catId => {
+                apiData[catId].forEach(api => {
+                    allApis.push({ ...api, category: catId });
+                });
+            });
+            
+            const filtered = allApis.filter(api => 
+                api.name.includes(keyword) || 
+                api.id.toLowerCase().includes(keyword.toLowerCase())
+            );
+            
+            renderSearchResults(filtered, keyword);
+        }
+
+        // 渲染搜索结果
+        function renderSearchResults(results, keyword) {
+            const mainContent = document.getElementById('mainContent');
+            
+            let html = `
+                <div class="flex items-center justify-between mb-6">
+                    <div>
+                        <h2 class="text-xl font-bold text-slate-800">搜索结果</h2>
+                        <p class="text-sm text-slate-500 mt-1">关键词 "${keyword}"，共找到 ${results.length} 个接口</p>
+                    </div>
+                    <button class="btn-outline" onclick="clearSearch()">清除搜索</button>
+                </div>
+                <div class="space-y-4">
+            `;
+            
+            if (results.length === 0) {
+                html += `
+                    <div class="text-center py-12">
+                        <i class="fas fa-search text-6xl text-slate-200 mb-4"></i>
+                        <p class="text-slate-500">未找到相关接口</p>
+                    </div>
+                `;
+            } else {
+                results.forEach((api, index) => {
+                    const category = categories.find(c => c.id === api.category);
+                    const colors = ['blue', 'green', 'purple', 'orange', 'cyan', 'pink', 'indigo', 'red'];
+                    const color = colors[index % colors.length];
+                    
+                    html += `
+                        <div class="api-card">
+                            <div class="flex items-start gap-5">
+                                <div class="api-icon bg-${color}-50 text-${color}-600">
+                                    <i class="fas fa-plug"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <div class="flex items-center gap-3 mb-2">
+                                        <h3 class="text-lg font-semibold text-slate-800">${api.name}</h3>
+                                        <span class="method-tag method-${api.method.toLowerCase()}">${api.method}</span>
+                                    </div>
+                                    <p class="text-sm text-slate-500 mb-3">${api.desc}</p>
+                                    <div class="flex items-center gap-6 text-sm">
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-slate-400">接口ID：</span>
+                                            <span class="font-mono text-slate-600 bg-slate-100 px-2 py-0.5 rounded">${api.id}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-slate-400">所属分类：</span>
+                                            <span class="text-slate-600">${category ? category.name : api.category}</span>
+                                        </div>
+                                        <div class="flex items-center gap-2">
+                                            <span class="text-slate-400">价格：</span>
+                                            <span class="text-red-500 font-semibold">¥${api.price}/次</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="flex flex-col gap-2">
+                                    <button class="btn-primary" onclick="openDetailModal('${api.id}')">查看详情</button>
+                                    <button class="btn-outline" onclick="openApplyModal('${api.id}', '${api.name}')">申请接口</button>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            mainContent.innerHTML = html;
+        }
+
+        // 清除搜索
+        function clearSearch() {
+            document.getElementById('globalSearch').value = '';
+            renderAPIList();
+        }
+
+        // 排序API
+        function sortAPI(sortType) {
+            const apis = apiData[currentCategory];
+            if (sortType === 'price') {
+                apis.sort((a, b) => parseFloat(a.price) - parseFloat(b.price));
+            }
+            renderAPIList();
+        }
+
+        // 数据中心下拉菜单切换
+        let dataCenterDropdownOpen = false;
+        function toggleDataCenterDropdown(event) {
+            event.stopPropagation();
+            const dropdown = document.getElementById('dataCenterDropdown');
+            const arrow = document.getElementById('dataCenterArrow');
+            dataCenterDropdownOpen = !dataCenterDropdownOpen;
+            
+            if (dataCenterDropdownOpen) {
+                dropdown.style.display = 'block';
+                arrow.classList.remove('fa-caret-down');
+                arrow.classList.add('fa-caret-up');
+            } else {
+                dropdown.style.display = 'none';
+                arrow.classList.remove('fa-caret-up');
+                arrow.classList.add('fa-caret-down');
+            }
+        }
+        
+        // 点击页面其他地方关闭下拉菜单
+        document.addEventListener('click', function() {
+            const dropdown = document.getElementById('dataCenterDropdown');
+            const arrow = document.getElementById('dataCenterArrow');
+            if (dropdown && dataCenterDropdownOpen) {
+                dropdown.style.display = 'none';
+                arrow.classList.remove('fa-caret-up');
+                arrow.classList.add('fa-caret-down');
+                dataCenterDropdownOpen = false;
+            }
+        });
+        
+        // 下拉菜单项悬停效果
+        document.querySelectorAll('.dropdown-item').forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                this.style.backgroundColor = '#f5f5f5';
+            });
+            item.addEventListener('mouseleave', function() {
+                this.style.backgroundColor = 'transparent';
+            });
+        });
+
+        // 显示页面
+        function showPage(page) {
+            if (page === 'api') {
+                // 保持在当前API对接页面
+                return;
+            }
+            alert('功能开发中...');
+        }
+
+        // 显示控制台
+        function showConsole() {
+            alert('跳转到控制台...');
+        }
+
+        // 点击弹窗外部关闭
+        document.querySelectorAll('.modal-overlay').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    this.classList.remove('show');
+                    document.body.style.overflow = '';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
