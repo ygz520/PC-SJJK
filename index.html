@@ -1437,6 +1437,10 @@
                         <label class="form-label">联系电话 <span class="text-red-500">*</span></label>
                         <input type="tel" class="form-input" id="contactPhone" placeholder="请输入联系电话" required>
                     </div>
+                    <div class="form-group">
+                        <label class="form-label">公司名称</label>
+                        <input type="text" class="form-input" id="companyName" placeholder="请输入公司名称（选填）">
+                    </div>
                 </form>
                 <div class="apply-footer">
                     <i class="fas fa-phone-alt"></i>
@@ -1727,6 +1731,7 @@
         function submitApply() {
             const name = document.getElementById('contactName').value.trim();
             const phone = document.getElementById('contactPhone').value.trim();
+            const company = document.getElementById('companyName').value.trim();
 
             if (!name) {
                 alert('请输入联系人姓名');
@@ -1741,7 +1746,13 @@
                 return;
             }
 
-            alert(`申请提交成功！\n\n接口：${currentApiName}\n联系人：${name}\n电话：${phone}\n\n我们的客服人员将在24小时内与您联系。`);
+            let successMsg = `申请提交成功！\n\n接口：${currentApiName}\n联系人：${name}\n电话：${phone}`;
+            if (company) {
+                successMsg += `\n公司名称：${company}`;
+            }
+            successMsg += `\n\n我们的客服人员将在24小时内与您联系。`;
+            
+            alert(successMsg);
             closeApplyModal();
             document.getElementById('applyForm').reset();
         }
