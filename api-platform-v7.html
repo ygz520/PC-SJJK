@@ -697,7 +697,7 @@
                 </div>
             </div>
             <div class="header-nav">
-                <a href="index.html" class="nav-btn">首页</a>
+                <a href="api-platform-intro-v2.html" class="nav-btn">首页</a>
                 <a href="api-platform-v7.html" class="nav-btn active">全部数据接口</a>
             </div>
             <div class="hotline">
@@ -894,11 +894,15 @@
                 <form id="applyForm">
                     <div class="form-group">
                         <label class="form-label">联系人 <span class="text-red-500">*</span></label>
-                        <input type="text" class="form-input" placeholder="请输入联系人姓名" required>
+                        <input type="text" class="form-input" id="contactName" placeholder="请输入联系人姓名" required>
                     </div>
                     <div class="form-group">
                         <label class="form-label">联系电话 <span class="text-red-500">*</span></label>
-                        <input type="tel" class="form-input" placeholder="请输入联系电话" required>
+                        <input type="tel" class="form-input" id="contactPhone" placeholder="请输入联系电话" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">公司名称</label>
+                        <input type="text" class="form-input" id="companyName" placeholder="请输入公司名称（选填）">
                     </div>
                 </form>
                 
@@ -1318,7 +1322,17 @@
         function submitApply() {
             const form = document.getElementById('applyForm');
             if (form.checkValidity()) {
-                alert('申请提交成功！我们会尽快与您联系。');
+                const name = document.getElementById('contactName').value.trim();
+                const phone = document.getElementById('contactPhone').value.trim();
+                const company = document.getElementById('companyName').value.trim();
+                
+                let successMsg = `申请提交成功！\n\n接口：${currentApiName}\n联系人：${name}\n电话：${phone}`;
+                if (company) {
+                    successMsg += `\n公司名称：${company}`;
+                }
+                successMsg += `\n\n我们的客服人员将在24小时内与您联系。`;
+                
+                alert(successMsg);
                 closeModal('applyModal');
                 form.reset();
             } else {
