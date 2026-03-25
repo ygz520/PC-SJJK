@@ -66,12 +66,57 @@
             font-weight: 500;
         }
         
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+        }
+        
         .header-nav {
             display: flex;
             align-items: center;
             gap: 32px;
             margin-left: auto;
-            margin-right: 60px;
+            margin-right: 40px;
+        }
+        
+        /* 顶部搜索框 */
+        .header-search {
+            display: flex;
+            align-items: center;
+            background: #f5f7fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 2px;
+            width: 320px;
+        }
+        
+        .header-search-input {
+            flex: 1;
+            border: none;
+            padding: 10px 14px;
+            font-size: 14px;
+            outline: none;
+            background: transparent;
+        }
+        
+        .header-search-input::placeholder {
+            color: #999;
+        }
+        
+        .header-search-btn {
+            background: #1890ff;
+            color: #fff;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .header-search-btn:hover {
+            background: #40a9ff;
         }
         
         .nav-link {
@@ -851,6 +896,12 @@
                     <img src="LOGO.jpg" alt="比地招标" class="logo-img">
                     <div class="divider"></div>
                     <div class="page-title">比地数据接口服务</div>
+                </div>
+                <div class="header-search">
+                    <input type="text" class="header-search-input" id="searchInput" placeholder="搜索接口名称、ID或关键词...">
+                    <button class="header-search-btn" onclick="searchAPI()">
+                        <i class="fas fa-search"></i>
+                    </button>
                 </div>
             </div>
             <nav class="header-nav">
@@ -1653,6 +1704,24 @@
         function closeApplyModal() {
             document.getElementById('applyModal').classList.remove('show');
         }
+
+        // 搜索API
+        function searchAPI() {
+            const keyword = document.getElementById('searchInput').value.trim();
+            if (!keyword) {
+                alert('请输入搜索关键词');
+                return;
+            }
+            // 跳转到api-platform-v7.html并传递搜索参数
+            window.location.href = `api-platform-v7.html?search=${encodeURIComponent(keyword)}`;
+        }
+        
+        // 回车搜索
+        document.getElementById('searchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                searchAPI();
+            }
+        });
 
         // 提交申请
         function submitApply() {
