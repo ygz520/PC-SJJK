@@ -771,14 +771,18 @@
         
         .modal-body {
             padding: 24px;
+            overflow-y: auto;
+            flex: 1;
         }
-        
+
         .modal-footer {
             padding: 16px 24px;
             border-top: 1px solid #e8e8e8;
             display: flex;
             justify-content: flex-end;
             gap: 12px;
+            background: #fff;
+            border-radius: 0 0 12px 12px;
         }
         
         .apply-notice {
@@ -1300,7 +1304,7 @@
 
     <!-- 接口详情弹窗 -->
     <div class="modal-overlay" id="detailModal">
-        <div class="modal-content" style="width: 700px; max-height: 80vh; overflow-y: auto;">
+        <div class="modal-content" style="width: 700px; max-height: 80vh; display: flex; flex-direction: column;">
             <div class="modal-header">
                 <div class="flex items-center gap-3">
                     <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
@@ -1317,7 +1321,10 @@
             </div>
             <div class="modal-body">
                 <div style="display: flex; border-bottom: 1px solid #e8e8e8; margin-bottom: 20px;">
-                    <div class="detail-tab active" style="padding: 12px 20px; cursor: default; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">接口信息</div>
+                    <div class="detail-tab active" onclick="switchDetailTab(this, 'detailInfo')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">接口信息</div>
+                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailRequest')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">请求参数</div>
+                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailResponse')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">响应字段</div>
+                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailErrorCode')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">错误码</div>
                 </div>
 
                 <div id="detailInfo" class="detail-tab-content" style="display: block;">
@@ -1343,6 +1350,294 @@
                         <p style="font-size: 13px; color: #999; margin-bottom: 8px;">接口地址</p>
                         <div style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 6px; font-family: monospace; font-size: 14px;" id="detailUrl">https://api.bidizhaobiao.com/v1/company/base</div>
                     </div>
+                </div>
+
+                <div id="detailRequest" class="detail-tab-content" style="display: none;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">参数名</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">参数说明</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">类型</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">是否必填</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">描述</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">示例值</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">app_key</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">AppKey</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">是</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">应用密钥，控制台申请获得</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">YOUR_APP_KEY</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">timestamp</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">时间戳</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">是</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">请求时间戳（毫秒），有效期10分钟</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">1711123456789</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">sign</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">签名</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">是</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">MD5(app_key+timestamp+app_secret)，32位小写</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">a1b2c3...</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_name</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">企业名称</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">与credit_code二选一</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">精确或模糊匹配企业名称</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">某某科技有限公司</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">credit_code</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">统一社会信用代码</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">与company_name二选一</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">18位统一社会信用代码</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">91310105MA1FW4X09L</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="detailResponse" class="detail-tab-content" style="display: none;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">字段名</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">字段说明</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">类型</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">备注/说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_name</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">企业名称</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(255)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_code</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">注册号</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">credit_no</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">统一信用代码</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">org_code</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">组织机构代码</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(20)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">tax_code</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">税务号</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">establish_date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">成立日期</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">legal_person</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">法定代表人</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(255)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">legal_person_caption</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">法人人头衔</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(10)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_status</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">登记状态</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_type</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">类型</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">authority</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">登记机关</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(255)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">issue_date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">核准日期</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">operation_startdate</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">营业期限自</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">operation_enddate</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">营业期限至</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">capital</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">注册资本</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">company_address</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">地址</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(300)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">business_scope</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">经营范围</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">text</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">cancel_date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">注销日期</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">cancel_reason</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">注销原因</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(500)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">revoke_date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">吊销日期</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">date</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">revoke_reason</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">吊销原因</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(500)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">use_flag</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">使用标记，10废弃数据</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">tinyint(4)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">legal_person_type</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">法人类型，0自然人，1非</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">tinyint(4)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">real_capital</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">实缴资本</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">en_name</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">英文名称</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(255)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">list_code</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">上市代码</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">varchar(50)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">legal_person_id</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">法人id</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">char(32)</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="detailErrorCode" class="detail-tab-content" style="display: none;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">错误码</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">错误标识</th>
+                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">200</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">SUCCESS</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">请求成功</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">400</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">INVALID_PARAMS</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">请求参数有误</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">401</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">UNAUTHORIZED</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">AppKey无效或签</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">403</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">FORBIDDEN</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">无权限访问该接</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">404</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">NOT_FOUND</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">查询数据不存在</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">429</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">RATE_LIMIT</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">请求频率超限，请</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">500</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">SERVER_ERROR</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">服务端内部错误</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">503</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">SERVICE_UNAVAILABLE</td>
+                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">服务暂时不可用</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
