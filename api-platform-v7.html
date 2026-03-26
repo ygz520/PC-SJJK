@@ -473,7 +473,8 @@
             border-radius: 12px;
             width: 800px;
             max-height: 85vh;
-            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
             animation: modalSlideIn 0.3s ease;
         }
         
@@ -492,14 +493,18 @@
         
         .modal-body {
             padding: 24px;
+            overflow-y: auto;
+            flex: 1;
         }
-        
+
         .modal-footer {
             padding: 16px 24px;
             border-top: 1px solid #e8e8e8;
             display: flex;
             justify-content: flex-end;
             gap: 12px;
+            background: #fff;
+            border-radius: 0 0 12px 12px;
         }
         
         .tabs {
@@ -698,7 +703,7 @@
             </div>
             <div class="header-nav">
                 <a href="api-platform-intro-v2.html" class="nav-btn">首页</a>
-                <a href="index.html" class="nav-btn active">全部数据接口</a>
+                <a href="api-platform-v7.html" class="nav-btn active">全部数据接口</a>
             </div>
             <div class="hotline">
                 <div class="hotline-icon">
@@ -758,7 +763,10 @@
             </div>
             <div class="modal-body">
                 <div class="tabs">
-                    <div class="tab active">接口信息</div>
+                    <div class="tab active" onclick="switchTab(this, 'apiInfo')">接口信息</div>
+                    <div class="tab" onclick="switchTab(this, 'requestParams')">请求参数</div>
+                    <div class="tab" onclick="switchTab(this, 'responseFields')">响应字段</div>
+                    <div class="tab" onclick="switchTab(this, 'errorCodes')">错误码</div>
                 </div>
 
                 <div id="apiInfo" class="tab-content active">
@@ -784,6 +792,294 @@
                         <p class="text-sm text-slate-500 mb-2">接口地址</p>
                         <div class="code-block" id="detailUrl">https://api.bidizhaobiao.com/v1/company/base</div>
                     </div>
+                </div>
+
+                <div id="requestParams" class="tab-content">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>参数名</th>
+                                <th>参数说明</th>
+                                <th>类型</th>
+                                <th>是否必填</th>
+                                <th>描述</th>
+                                <th>示例值</th>
+                            </tr>
+                        </thead>
+                        <tbody id="requestParamsBody">
+                            <tr>
+                                <td>app_key</td>
+                                <td>AppKey</td>
+                                <td>string</td>
+                                <td>是</td>
+                                <td>应用密钥，控制台申请获得</td>
+                                <td>YOUR_APP_KEY</td>
+                            </tr>
+                            <tr>
+                                <td>timestamp</td>
+                                <td>时间戳</td>
+                                <td>string</td>
+                                <td>是</td>
+                                <td>请求时间戳（毫秒），有效期10分钟</td>
+                                <td>1711123456789</td>
+                            </tr>
+                            <tr>
+                                <td>sign</td>
+                                <td>签名</td>
+                                <td>string</td>
+                                <td>是</td>
+                                <td>MD5(app_key+timestamp+app_secret)，32位小写</td>
+                                <td>a1b2c3...</td>
+                            </tr>
+                            <tr>
+                                <td>company_name</td>
+                                <td>企业名称</td>
+                                <td>string</td>
+                                <td>与credit_code二选一</td>
+                                <td>精确或模糊匹配企业名称</td>
+                                <td>某某科技有限公司</td>
+                            </tr>
+                            <tr>
+                                <td>credit_code</td>
+                                <td>统一社会信用代码</td>
+                                <td>string</td>
+                                <td>与company_name二选一</td>
+                                <td>18位统一社会信用代码</td>
+                                <td>91310105MA1FW4X09L</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="responseFields" class="tab-content">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>字段名</th>
+                                <th>字段说明</th>
+                                <th>类型</th>
+                                <th>备注/说明</th>
+                            </tr>
+                        </thead>
+                        <tbody id="responseFieldsBody">
+                            <tr>
+                                <td>company_name</td>
+                                <td>企业名称</td>
+                                <td>varchar(255)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>company_code</td>
+                                <td>注册号</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>credit_no</td>
+                                <td>统一信用代码</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>org_code</td>
+                                <td>组织机构代码</td>
+                                <td>varchar(20)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>tax_code</td>
+                                <td>税务号</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>establish_date</td>
+                                <td>成立日期</td>
+                                <td>date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>legal_person</td>
+                                <td>法定代表人</td>
+                                <td>varchar(255)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>legal_person_caption</td>
+                                <td>法人人头衔</td>
+                                <td>varchar(10)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>company_status</td>
+                                <td>登记状态</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>company_type</td>
+                                <td>类型</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>authority</td>
+                                <td>登记机关</td>
+                                <td>varchar(255)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>issue_date</td>
+                                <td>核准日期</td>
+                                <td>date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>operation_startdate</td>
+                                <td>营业期限自</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>operation_enddate</td>
+                                <td>营业期限至</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>capital</td>
+                                <td>注册资本</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>company_address</td>
+                                <td>地址</td>
+                                <td>varchar(300)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>business_scope</td>
+                                <td>经营范围</td>
+                                <td>text</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>cancel_date</td>
+                                <td>注销日期</td>
+                                <td>date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>cancel_reason</td>
+                                <td>注销原因</td>
+                                <td>varchar(500)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>revoke_date</td>
+                                <td>吊销日期</td>
+                                <td>date</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>revoke_reason</td>
+                                <td>吊销原因</td>
+                                <td>varchar(500)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>use_flag</td>
+                                <td>使用标记，10废弃数据</td>
+                                <td>tinyint(4)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>legal_person_type</td>
+                                <td>法人类型，0自然人，1非</td>
+                                <td>tinyint(4)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>real_capital</td>
+                                <td>实缴资本</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>en_name</td>
+                                <td>英文名称</td>
+                                <td>varchar(255)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>list_code</td>
+                                <td>上市代码</td>
+                                <td>varchar(50)</td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td>legal_person_id</td>
+                                <td>法人id</td>
+                                <td>char(32)</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="errorCodes" class="tab-content">
+                    <table class="param-table">
+                        <thead>
+                            <tr>
+                                <th>错误码</th>
+                                <th>错误标识</th>
+                                <th>说明</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>200</td>
+                                <td>SUCCESS</td>
+                                <td>请求成功</td>
+                            </tr>
+                            <tr>
+                                <td>400</td>
+                                <td>INVALID_PARAMS</td>
+                                <td>请求参数有误</td>
+                            </tr>
+                            <tr>
+                                <td>401</td>
+                                <td>UNAUTHORIZED</td>
+                                <td>AppKey无效或签</td>
+                            </tr>
+                            <tr>
+                                <td>403</td>
+                                <td>FORBIDDEN</td>
+                                <td>无权限访问该接</td>
+                            </tr>
+                            <tr>
+                                <td>404</td>
+                                <td>NOT_FOUND</td>
+                                <td>查询数据不存在</td>
+                            </tr>
+                            <tr>
+                                <td>429</td>
+                                <td>RATE_LIMIT</td>
+                                <td>请求频率超限，请</td>
+                            </tr>
+                            <tr>
+                                <td>500</td>
+                                <td>SERVER_ERROR</td>
+                                <td>服务端内部错误</td>
+                            </tr>
+                            <tr>
+                                <td>503</td>
+                                <td>SERVICE_UNAVAILABLE</td>
+                                <td>服务暂时不可用</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
 
             </div>
@@ -1229,6 +1525,23 @@
             document.getElementById('apiInfo').classList.add('active');
             
             openModal('detailModal');
+        }
+
+        // 切换标签页
+        function switchTab(element, tabId) {
+            // 移除所有标签的active状态
+            document.querySelectorAll('.tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // 添加当前标签的active状态
+            element.classList.add('active');
+            
+            // 隐藏所有内容
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            // 显示当前内容
+            document.getElementById(tabId).classList.add('active');
         }
 
         // 打开申请弹窗
