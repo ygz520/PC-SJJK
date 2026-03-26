@@ -1317,12 +1317,9 @@
             </div>
             <div class="modal-body">
                 <div style="display: flex; border-bottom: 1px solid #e8e8e8; margin-bottom: 20px;">
-                    <div class="detail-tab active" onclick="switchDetailTab(this, 'detailInfo')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">接口信息</div>
-                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailRequest')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">请求参数</div>
-                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailResponse')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">返回参数</div>
-                    <div class="detail-tab" onclick="switchDetailTab(this, 'detailExample')" style="padding: 12px 20px; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">示例代码</div>
+                    <div class="detail-tab active" style="padding: 12px 20px; cursor: default; border-bottom: 2px solid transparent; transition: all 0.3s; font-size: 14px; color: #666;">接口信息</div>
                 </div>
-                
+
                 <div id="detailInfo" class="detail-tab-content" style="display: block;">
                     <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px;">
                         <div>
@@ -1347,65 +1344,7 @@
                         <div style="background: #1e293b; color: #e2e8f0; padding: 12px 16px; border-radius: 6px; font-family: monospace; font-size: 14px;" id="detailUrl">https://api.bidizhaobiao.com/v1/company/base</div>
                     </div>
                 </div>
-                
-                <div id="detailRequest" class="detail-tab-content" style="display: none;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">参数名</th>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">类型</th>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">必填</th>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">说明</th>
-                            </tr>
-                        </thead>
-                        <tbody id="detailRequestBody">
-                            <tr>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">keyword</td>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">string</td>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">是</td>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">查询关键词</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="detailResponse" class="detail-tab-content" style="display: none;">
-                    <table style="width: 100%; border-collapse: collapse;">
-                        <thead>
-                            <tr>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">参数名</th>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">类型</th>
-                                <th style="padding: 12px 16px; text-align: left; border-bottom: 1px solid #e8e8e8; background: #f8fafc; font-weight: 600; color: #475569; font-size: 13px;">说明</th>
-                            </tr>
-                        </thead>
-                        <tbody id="detailResponseBody">
-                            <tr>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">code</td>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">int</td>
-                                <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">状态码</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                
-                <div id="detailExample" class="detail-tab-content" style="display: none;">
-                    <div style="margin-bottom: 16px;">
-                        <p style="font-size: 13px; color: #999; margin-bottom: 8px;">请求示例</p>
-                        <pre style="background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 6px; font-family: monospace; font-size: 13px; overflow-x: auto;" id="detailExampleRequest">curl -X GET "https://api.bidizhaobiao.com/v1/company/base?keyword=企业名称" \
-  -H "Authorization: Bearer YOUR_API_KEY"</pre>
-                    </div>
-                    <div>
-                        <p style="font-size: 13px; color: #999; margin-bottom: 8px;">响应示例</p>
-                        <pre style="background: #1e293b; color: #e2e8f0; padding: 16px; border-radius: 6px; font-family: monospace; font-size: 13px; overflow-x: auto;" id="detailExampleResponse">{
-  "code": 200,
-  "message": "success",
-  "data": {
-    "companyName": "企业名称",
-    "creditCode": "91110000123456789X"
-  }
-}</pre>
-                    </div>
-                </div>
+
             </div>
             <div class="modal-footer">
                 <button class="btn-detail" onclick="closeDetailModal()">关闭</button>
@@ -1625,27 +1564,6 @@
             document.getElementById('detailDesc').textContent = api.desc;
             document.getElementById('detailUrl').textContent = `https://api.bidizhaobiao.com${api.path}`;
 
-            // 渲染请求参数
-            const requestBody = document.getElementById('detailRequestBody');
-            requestBody.innerHTML = api.requestParams.map(p => `
-                <tr>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.name}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.type}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.required}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.desc}</td>
-                </tr>
-            `).join('');
-
-            // 渲染返回参数
-            const responseBody = document.getElementById('detailResponseBody');
-            responseBody.innerHTML = api.responseParams.map(p => `
-                <tr>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.name}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.type}</td>
-                    <td style="padding: 12px 16px; border-bottom: 1px solid #e8e8e8; font-size: 14px;">${p.desc}</td>
-                </tr>
-            `).join('');
-
             // 重置标签页
             document.querySelectorAll('.detail-tab').forEach(tab => {
                 tab.classList.remove('active');
@@ -1685,11 +1603,9 @@
 
         // 从详情页申请接口
         function applyFromDetail() {
+            document.getElementById('applyApiName').textContent = currentApiName;
+            document.getElementById('applyModal').classList.add('show');
             closeDetailModal();
-            setTimeout(() => {
-                document.getElementById('applyApiName').textContent = currentApiName;
-                document.getElementById('applyModal').classList.add('show');
-            }, 300);
         }
 
         // 显示申请弹窗
